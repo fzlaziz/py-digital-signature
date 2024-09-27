@@ -31,7 +31,7 @@ def verify_file_signature(file_path, signature_path, public_key_path):
             ),
             hashes.SHA256()
         )
-        print("Digital signature is not valid. This is the original File that has been signed.")
+        print("Digital signature is valid. This is the original File that has been signed.")
     except Exception as e:
         print("Digital Signature is not valid. Either the file or the signature is not matched or changed.")
 

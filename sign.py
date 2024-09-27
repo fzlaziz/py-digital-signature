@@ -1,5 +1,7 @@
 import hashlib
 import argparse
+import os
+import shutil
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization, hashes
 
@@ -28,18 +30,22 @@ def sign_file(file_path, private_key_path):
         hashes.SHA256()
     )
 
-    with open("file_signature.sig", "wb") as sig_file:
+    folder_name = os.path.splitext(os.path.basename(file_path))[0] + "_signed"
+    os.makedirs(folder_name, exist_ok=True)
+
+    shutil.copy(file_path, folder_name)
+
+    signature_path = os.path.join(folder_name, "file_signature.sig")
+    with open(signature_path, "wb") as sig_file:
         sig_file.write(signature)
 
-    print("File has been signed and saved")
+    print(f"File has been signed. Original file and signature are saved in the '{folder_name}' folder.")
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Sign a file with a private key.")
     parser.add_argument("file_path", help="Path to the file to be signed.")
     parser.add_argument("private_key_path", help="Path to the private key.")
 
     args = parser.parse_args()
-
 
     sign_file(args.file_path, args.private_key_path)
